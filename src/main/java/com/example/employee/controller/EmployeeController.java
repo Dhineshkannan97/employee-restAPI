@@ -12,6 +12,7 @@ import java.util.List;
 
 
 @SpringBootApplication
+
 @RestController
 public class EmployeeController {
     private List<Employee> employees = new ArrayList<>();
@@ -55,5 +56,24 @@ public class EmployeeController {
             }
         }
         return "Employee with ID " + id + " not found";
+    }    @PostMapping("/send-message")
+    public String sendMessage(@RequestParam("phone_number") String phoneNumber, @RequestParam("message") String message) {
+        for (Employee employee : employees) {
+            if (employee.getPhone_number().equals(phoneNumber)) {
+                employee.setMessage(message);
+                return "Message set for employee with phone number " + phoneNumber;
+            }
+        }
+        return "Employee with phone number " + phoneNumber + " not found";
+    }
+
+    @GetMapping("/messages/{phone_number}")
+    public String getMessageByPhoneNumber(@PathVariable("phone_number") String phoneNumber) {
+        for (Employee employee : employees) {
+            if (employee.getPhone_number().equals(phoneNumber)) {
+                return employee.getMessage();
+            }
+        }
+        return "Message not found for employee with phone number " + phoneNumber;
     }
 }
